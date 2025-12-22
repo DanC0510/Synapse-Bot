@@ -20,5 +20,9 @@
   "homepage": "https://github.com/DanC0510/Synapse-Bot#readme",
   "dependencies": {
     "discord.js": "^14.25.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2"
   }
 }
