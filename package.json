@@ -1,0 +1,24 @@
+{
+  "name": "synapse-bot",
+  "version": "1.0.0",
+  "description": "Custom Discord Bot designed for music from youtube, polls, reaction roles and more!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanC0510/Synapse-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DanC0510/Synapse-Bot/issues"
+  },
+  "homepage": "https://github.com/DanC0510/Synapse-Bot#readme",
+  "dependencies": {
+    "discord.js": "^14.25.1"
+  }
+}
