@@ -21,6 +21,12 @@ module.exports = {
 		for (const thread of threads) {
 			if (movies.length == 9) break;
 			movies.push(thread.name);
+			try {
+				await thread.setArchived(true, 'Suggestion is in schedule');
+			}
+			catch (error) {
+				console.error(`Failed to archive thread ${thread.name}:`, error);
+			}
 		}
 
 		const role = interaction.options.getRole('role');
