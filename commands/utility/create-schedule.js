@@ -7,27 +7,24 @@ module.exports = {
 		.addStringOption(o => o.setName('date').setRequired(true).setDescription('YYYY-MM-DD'))
 		.addStringOption(o => o.setName('time').setRequired(true).setDescription('HH:MM:SS'))
 		.addRoleOption(o => o.setName('role').setRequired(true).setDescription('Role to mention in the schedule'))
-		.addStringOption(o => o.setName('watching-next').setRequired(true).setDescription('The movie or TV show you are watching next'))
-		.addStringOption(o => o.setName('movie1').setRequired(true).setDescription('First movie option'))
-		.addStringOption(o => o.setName('movie2').setDescription('Second movie option'))
-		.addStringOption(o => o.setName('movie3').setDescription('Third movie option'))
-		.addStringOption(o => o.setName('movie4').setDescription('Fourth movie option')),
+		.addStringOption(o => o.setName('watching-next').setRequired(true).setDescription('The movie or TV show you are watching next')),
 
 	async execute(interaction) {
 		const date = new Date(`${interaction.options.getString('date')}T${interaction.options.getString('time')}`);
 		const timeString = time(date, TimestampStyles.LongDateTime);
-
 		const watchingNext = interaction.options.getString('watching-next');
-		const movies = [
-			interaction.options.getString('movie1'),
-			interaction.options.getString('movie2'),
-			interaction.options.getString('movie3'),
-			interaction.options.getString('movie4'),
-		].filter(Boolean);
+		const channel = interaction.channel;
+		const open_threads = await channel.threads.fetchActive();
+		const movies = [];
+
+		const threads = open_threads.threads.values();
+		for (const thread of threads) {
+			if (movies.length == 9) break;
+			movies.push(thread.name);
+		}
 
 		const role = interaction.options.getRole('role');
 
-		// Build movie lines dynamically
 		const movieLines = movies.map((m, i) => `${i + 1}\u20E3  **${m}**`).join('\n');
 
 		const messageContent = `# Schedule
@@ -38,14 +35,15 @@ ${movieLines}
 Please create a thread to leave suggestions for the next film/TV show to watch
 ${roleMention(role.id)}`;
 
-		const message = await interaction.reply({
+		const response = await interaction.reply({
 			content: messageContent,
 			allowedMentions: { roles: [role.id] },
-			fetchReply: true,
+			withResponse: true,
 		});
 
-		// Add reactions dynamically
-		const numberEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣'];
+		// Add reactions for voting
+		const { message } = response.resource;
+		const numberEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
 		for (let i = 0; i < movies.length; i++) {
 			await message.react(numberEmojis[i]);
 		}
