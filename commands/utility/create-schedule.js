@@ -1,38 +1,53 @@
-const { SlashCommandBuilder, time, TimestampStyles } = require('discord.js');
+const { SlashCommandBuilder, time, TimestampStyles, roleMention } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('create-schedule')
 		.setDescription('Creates a schedule for the user.')
-		.addStringOption(option => option.setName('date').setRequired(true).setDescription('The date of the schedule in YYYY-MM-DD format'))
-		.addStringOption(option => option.setName('time').setRequired(true).setDescription('The time of the schedule in HH:MM:SS format'))
-		.addStringOption(option => option.setName('watching-next').setRequired(true).setDescription('The movie or TV show you are watching next'))
-		.addStringOption(option => option.setName('movie1').setRequired(true).setDescription('The first movie option'))
-		.addStringOption(option => option.setName('movie2').setRequired(true).setDescription('The second movie option'))
-		.addStringOption(option => option.setName('movie3').setRequired(true).setDescription('The third movie option'))
-		.addStringOption(option => option.setName('movie4').setRequired(true).setDescription('The fourth movie option'))
-		.addRoleOption(option => option.setName('role').setRequired(true).setDescription('The role to mention')),
+		.addStringOption(o => o.setName('date').setRequired(true).setDescription('YYYY-MM-DD'))
+		.addStringOption(o => o.setName('time').setRequired(true).setDescription('HH:MM:SS'))
+		.addRoleOption(o => o.setName('role').setRequired(true).setDescription('Role to mention in the schedule'))
+		.addStringOption(o => o.setName('watching-next').setRequired(true).setDescription('The movie or TV show you are watching next'))
+		.addStringOption(o => o.setName('movie1').setRequired(true).setDescription('First movie option'))
+		.addStringOption(o => o.setName('movie2').setDescription('Second movie option'))
+		.addStringOption(o => o.setName('movie3').setDescription('Third movie option'))
+		.addStringOption(o => o.setName('movie4').setDescription('Fourth movie option')),
+
 	async execute(interaction) {
-		const date = new Date(interaction.options.getString('date') + 'T' + interaction.options.getString('time'));
+		const date = new Date(`${interaction.options.getString('date')}T${interaction.options.getString('time')}`);
 		const timeString = time(date, TimestampStyles.LongDateTime);
 
-		const response = await interaction.reply({
-			content: `# Schedule
-**${timeString} - ${interaction.options.getString('watching-next')}**
+		const watchingNext = interaction.options.getString('watching-next');
+		const movies = [
+			interaction.options.getString('movie1'),
+			interaction.options.getString('movie2'),
+			interaction.options.getString('movie3'),
+			interaction.options.getString('movie4'),
+		].filter(Boolean);
+
+		const role = interaction.options.getRole('role');
+
+		// Build movie lines dynamically
+		const movieLines = movies.map((m, i) => `${i + 1}\u20E3  **${m}**`).join('\n');
+
+		const messageContent = `# Schedule
+**${timeString} - ${watchingNext}**
 # Following Movies & TV
 Please react below with the corresponding emoji for what film to watch next
-:one:  **${interaction.options.getString('movie1')}**
-:two:  **${interaction.options.getString('movie2')}**
-:three:  **${interaction.options.getString('movie3')}**
-:four:  **${interaction.options.getString('movie4')}**
+${movieLines}
 Please create a thread to leave suggestions for the next film/TV show to watch
-${interaction.options.getRole('role')}`, withResponse: true,
+${roleMention(role.id)}`;
+
+		const message = await interaction.reply({
+			content: messageContent,
+			allowedMentions: { roles: [role.id] },
+			fetchReply: true,
 		});
 
-		const { message } = response.resource;
-		message.react('1️⃣');
-		message.react('2️⃣');
-		message.react('3️⃣');
-		message.react('4️⃣');
+		// Add reactions dynamically
+		const numberEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣'];
+		for (let i = 0; i < movies.length; i++) {
+			await message.react(numberEmojis[i]);
+		}
 	},
 };
