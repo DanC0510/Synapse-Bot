@@ -42,3 +42,15 @@ In the discord server you are putting the bot into, right click on the server na
 Place the Server ID in the "guildId" field.
 Save the file and remove the .example from the filename.
 
+
+
+### Step 3 - Running the Bot
+
+Ensure you have npm and node installed on your system.
+
+Run "npm init -y" in your terminal.
+
+Then run "npm install discord.js" in your terminal.
+Then run "node index.js" in your terminal.
+Your bot is now up and running!
+
