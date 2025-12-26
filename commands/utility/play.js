@@ -68,7 +68,7 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setColor('#1DB954')
                     .setTitle('Song Added To Queue')
-                    .setDescription(`[${res.tracks[0].title}](${res.track[0].uri})`)
+                    .setDescription(`[${res.tracks[0].title}](${res.tracks[0].uri})`)
                     .setFooter({text: 'Playing now!'})
                     .setTimestamp()
 
