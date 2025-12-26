@@ -26,7 +26,17 @@ module.exports = {
                     content: "**I don't have permission to join this voice channel! Please speak to Server Owner or Moderator to fix!**",
                     ephemeral: true
                 });
-            }            
+            }
+            
+            await interaction.reply({ content: 'Searching...'});
+
+            const player = await client.manager.createPlayer({
+                guildId: interaction.guild.id,
+                textId: interaction.channel.id,
+                voiceId: channel.id,
+                volume: 100,
+                deaf: true
+            });
       } 
       catch (error) {
 
