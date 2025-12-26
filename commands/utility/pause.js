@@ -13,8 +13,7 @@ module.exports = {
             const { channel } = interaction.member.voice;
             if(!channel || interaction.member.voice.channel !== interaction.guild.members.me.voice.channel) return await interaction.reply("I'm not in the same voice channel as you!");
 
-            const paused = !player.paused
-            await player.pause(paused);
+            await player.pause(true);
 
             const embed = new EmbedBuilder()
                 .setColor('#F54927')

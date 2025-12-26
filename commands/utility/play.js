@@ -78,7 +78,7 @@ module.exports = {
         else{
             const player = await client.manager.players.get(interaction.guild.id);
             
-            if(!player.paused) { return await interaction.reply(`**There is no currently playing song!**`) }
+            if(!player.paused) { return await interaction.reply(`**There is already a song playing!**`) }
             player.play();
             const embed = new EmbedBuilder()
                     .setColor('#1DB954')
