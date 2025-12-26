@@ -7,19 +7,20 @@ module.exports = {
     .addStringOption(option => 
       option
       .setName('loop-type')
+      .setDescription('Enter the type of loop to use')
       .setRequired(true)
       .setChoices(
       {
-        name: "Track",
-        value: "track"
+        name: 'Track',
+        value: 'track'
       },
       {
-        name: "Queue",
-        value: "queue"
+        name: 'Queue',
+        value: 'queue'
       },
       {
-        name: "No Loop",
-        value: "none"
+        name: 'No Loop',
+        value: 'none'
       })
     ),
     async execute(interaction, client) {
@@ -31,12 +32,13 @@ module.exports = {
             const { channel } = interaction.member.voice;
             if(!channel || interaction.member.voice.channel !== interaction.guild.members.me.voice.channel) return await interaction.reply("I'm not in the same voice channel as you!");
 
-            const loop_type = interaction.options.getStringOption('loop-type');
-            await player.loop(loop-type);
+            const loopType = interaction.options.getString('loop-type');
+            console.log(loopType);
+            await player.setLoop(loopType);
 
             const embed = new EmbedBuilder()
                 .setColor('#cf27f5')
-                .setTitle(loop_type === 'none' ? 'Ending Loop!' : loop_type === 'track' ? 'Looping Current Track!' : 'Looping Queue!')
+                .setTitle(loopType === 'none' ? 'Ending Loop!' : loopType === 'track' ? 'Looping Current Track!' : 'Looping Queue!')
                 .setDescription(`**[${player.queue.current.title}](${player.queue.current.uri})** \n\n**Tracks Queued:** ${player.queue.totalSize}`)
                 .setFooter({ text: 'Enjoy the songs!'})
 
@@ -44,7 +46,7 @@ module.exports = {
       } 
       catch (error) {
             console.error(error);
-            return await interaction.reply(`**An error occurred while trying to skip the song.**`);
+            return await interaction.reply(`**An error occurred while trying to loop the song.**`);
       } 
     },
 };
