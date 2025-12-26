@@ -7,10 +7,10 @@ module.exports = {
     .addStringOption(option =>
         option.setName('search')
         .setDescription('The song to play')
-        .setRequired(true)
     ),
     async execute(interaction, client) {
       try {
+        if(interaction.options.getString('search')){
             const search = interaction.options.getString('search');
             const { channel } = interaction.member.voice;
 
@@ -74,6 +74,21 @@ module.exports = {
 
                     return await interaction.editReply({content: '', embeds: [embed]});
             }
+        }
+        else{
+            const player = await client.manager.players.get(interaction.guild.id);
+            
+            if(player.paused) { player.play(); }
+
+            const embed = new EmbedBuilder()
+                    .setColor('#1DB954')
+                    .setTitle('Resumed Track')
+                    .setDescription(`[${player.queue.current.title}](${player.queue.current.uri})`)
+                    .setFooter({text: 'Playing now!'})
+                    .setTimestamp()
+
+                    return await interaction.reply({content: '', embeds: [embed]});
+        }
       } 
       catch (error) {
             console.error(error);
