@@ -22,7 +22,7 @@ module.exports = {
             }
 
             if(!channel.permissionsFor(interaction.guild.members.me).has(PermissionsBitField.Flags.Connect)){
-                return interaction.editReply({
+                return await interaction.reply({
                     content: "**I don't have permission to join this voice channel! Please speak to Server Owner or Moderator to fix!**",
                     ephemeral: true
                 });
@@ -40,12 +40,12 @@ module.exports = {
 
             const res = await player.search(search, { requester: interaction.user });
 
-            if(!res.tracks.length){
+            if(!res.tracks.length || !res){
                 return interaction.editReply("No results found!");
             }
 
             if(res.type === "PLAYLIST") {
-                for (let track of res.track){
+                for (let track of res.tracks){
                     player.queue.add(track);
                 }
                 if(!player.playing && !player.paused){
@@ -53,12 +53,12 @@ module.exports = {
                 }
             
                 const embed = new EmbedBuilder()
-                    .setColor("#1DB954")
-                    .setTitle("Playlist Added To Queue")
+                    .setColor('#1DB954')
+                    .setTitle('Playlist Added To Queue')
                     .setDescription(`**[${res.playlistName}](${search})** \n\n**Tracks Queued:** \`${res.tracks.length}`)
-                    .setFooter({ text: "Enjoy the songs!"})
+                    .setFooter({ text: 'Enjoy the songs!'})
 
-                    return interaction.editReply({content: '', embeds: [embed]});
+                    return await interaction.editReply({content: '', embeds: [embed]});
             } else {
                 player.queue.add(res.tracks[0]);
                 if(!player.playing && !player.paused){
@@ -66,13 +66,13 @@ module.exports = {
                 }
 
                 const embed = new EmbedBuilder()
-                    .setColour("#1DB954")
-                    .setTitle("Song Added To Queue")
+                    .setColor('#1DB954')
+                    .setTitle('Song Added To Queue')
                     .setDescription(`[${res.tracks[0].title}](${res.track[0].uri})`)
-                    .setFooter({text: "Playing now!"})
+                    .setFooter({text: 'Playing now!'})
                     .setTimestamp()
 
-                    return interaction.editReply({content: '', embeds: [embed]});
+                    return await interaction.editReply({content: '', embeds: [embed]});
             }
       } 
       catch (error) {
