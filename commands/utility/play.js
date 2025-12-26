@@ -9,9 +9,9 @@ module.exports = {
         .setDescription('The song to play')
         .setRequired(true)
     ),
-    async execute(client, interaction) {
+    async execute(interaction, client) {
       try {
-            const search = interaction.option.getString('search');
+            const search = interaction.options.getString('search');
             const { channel } = interaction.member.voice;
 
             if(!channel){
@@ -21,8 +21,8 @@ module.exports = {
                 });
             }
 
-            if(!channel.permissionFor(interaction.guild.members.me).has(PermissionsBitField.Flags.Connect)){
-                return interaction.reply({
+            if(!channel.permissionsFor(interaction.guild.members.me).has(PermissionsBitField.Flags.Connect)){
+                return interaction.editReply({
                     content: "**I don't have permission to join this voice channel! Please speak to Server Owner or Moderator to fix!**",
                     ephemeral: true
                 });

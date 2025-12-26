@@ -50,9 +50,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 
 	try {
-		await command.execute(interaction);
-	// eslint-disable-next-line brace-style
-	} catch (error) {
+		await command.execute(interaction, client);
+	} 
+	catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {
 			await interaction.followUp({
