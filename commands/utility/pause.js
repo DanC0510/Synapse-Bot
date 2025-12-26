@@ -19,7 +19,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#F54927')
                 .setTitle('Current Song Paused')
-                .setDescription(`**[${player.queue.current.title}](${player.queue.current.uri}) Paused** \n\n**Tracks Queued:** ${player.queue.totalSize}`)
+                .setDescription(`**[${player.queue.current.title}](${player.queue.current.uri})** \n\n**Tracks Queued:** ${player.queue.totalSize}`)
                 .setFooter({ text: 'Enjoy the songs!'})
 
             return await interaction.reply({content: '', embeds: [embed]});
