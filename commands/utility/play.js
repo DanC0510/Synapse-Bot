@@ -43,6 +43,15 @@ module.exports = {
             if(!res.tracks.length){
                 return interaction.editReply("No results found!");
             }
+
+            if(res.type === "PLAYLIST") {
+                for (let track of res.track){
+                    player.queue.add(track);
+                }
+                if(!player.playing && !player.paused){
+                    player.play();
+                }
+            }
       } 
       catch (error) {
 
