@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
-const { token } = require('./config.json');
+const { token, guildId } = require('./config.json');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildVoiceStates] });
@@ -78,4 +78,13 @@ const Nodes = [{
 	url: host + ':' + port,
 	auth: password,
 	secure: false
-}]
+}];
+
+client.manager = new Kazagumo({
+	defaultSearchEngine: 'youtube',
+	plugins: [new Plugins.PlayerMoved(client),],
+	send: (guildId, payload) => {
+		const guild = client.guilds.cache.get(guildId);
+		if(guild) guild.shard.send(payload);
+	}
+}, new Connectors.DiscordJS(client), Nodes);
