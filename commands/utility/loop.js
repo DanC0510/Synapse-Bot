@@ -33,7 +33,6 @@ module.exports = {
             if(!channel || interaction.member.voice.channel !== interaction.guild.members.me.voice.channel) return await interaction.reply("I'm not in the same voice channel as you!");
 
             const loopType = interaction.options.getString('loop-type');
-            console.log(loopType);
             await player.setLoop(loopType);
 
             const embed = new EmbedBuilder()
