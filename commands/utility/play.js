@@ -51,10 +51,33 @@ module.exports = {
                 if(!player.playing && !player.paused){
                     player.play();
                 }
+            
+                const embed = new EmbedBuilder()
+                    .setColor("#1DB954")
+                    .setTitle("Playlist Added To Queue")
+                    .setDescription(`**[${res.playlistName}](${search})** \n\n**Tracks Queued:** \`${res.tracks.length}`)
+                    .setFooter({ text: "Enjoy the songs!"})
+
+                    return interaction.editReply({content: '', embeds: [embed]});
+            } else {
+                player.queue.add(res.tracks[0]);
+                if(!player.playing && !player.paused){
+                    player.play();
+                }
+
+                const embed = new EmbedBuilder()
+                    .setColour("#1DB954")
+                    .setTitle("Song Added To Queue")
+                    .setDescription(`[${res.tracks[0].title}](${res.track[0].uri})`)
+                    .setFooter({text: "Playing now!"})
+                    .setTimestamp()
+
+                    return interaction.editReply({content: '', embeds: [embed]});
             }
       } 
       catch (error) {
-
+            console.error(error);
+            return interaction.reply(`**An error occurred while trying to play the song.**`);
       } 
     },
 };
