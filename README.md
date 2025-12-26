@@ -50,7 +50,7 @@ Ensure you have npm and node installed on your system.
 
 Run "npm init -y" in your terminal.
 
-Then run "npm install discord.js" in your terminal.
+Then run "npm install discord.js dotenv shoukaku kazagumo" in your terminal.
 Then run "node deploy-commands.js" in your terminal.
 Then run "node index.js" in your terminal.
 Your bot is now up and running!
