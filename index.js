@@ -5,7 +5,7 @@ const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require(
 const { token, guildId } = require('./config.json');
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildVoiceStates] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] });
 
 // When the client is ready, run this code (only once).
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
@@ -71,7 +71,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 //Music Bot Stuff Here
 const { Connectors } = require ('shoukaku');
 const { Kazagumo, Plugins } = require('kazagumo');
-const { host, port, password } = require('Lavalink/config.json')
+const { host, port, password } = require('./Lavalink/config.json')
 
 const Nodes = [{
 	name: 'main',
