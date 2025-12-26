@@ -77,7 +77,7 @@ module.exports = {
       } 
       catch (error) {
             console.error(error);
-            return interaction.reply(`**An error occurred while trying to play the song.**`);
+            return await interaction.reply(`**An error occurred while trying to play the song.**`);
       } 
     },
 };
