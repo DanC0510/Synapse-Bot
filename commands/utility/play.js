@@ -37,6 +37,12 @@ module.exports = {
                 volume: 100,
                 deaf: true
             });
+
+            const res = await player.search(search, { requester: interaction.user });
+
+            if(!res.tracks.length){
+                return interaction.editReply("No results found!");
+            }
       } 
       catch (error) {
 
