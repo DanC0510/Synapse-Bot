@@ -2,10 +2,10 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
-const { token } = require('./config.json');
+const { token, guildId } = require('./config.json');
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] });
 
 // When the client is ready, run this code (only once).
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
@@ -50,9 +50,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 
 	try {
-		await command.execute(interaction);
-	// eslint-disable-next-line brace-style
-	} catch (error) {
+		await command.execute(interaction, client);
+	} 
+	catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {
 			await interaction.followUp({
@@ -68,3 +68,23 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		}
 	}
 });
+//Music Bot Stuff Here
+const { Connectors } = require ('shoukaku');
+const { Kazagumo, Plugins } = require('kazagumo');
+const { host, port, password } = require('./Lavalink/config.json')
+
+const Nodes = [{
+	name: 'main',
+	url: host + ':' + port,
+	auth: password,
+	secure: false
+}];
+
+client.manager = new Kazagumo({
+	defaultSearchEngine: 'youtube',
+	plugins: [new Plugins.PlayerMoved(client),],
+	send: (guildId, payload) => {
+		const guild = client.guilds.cache.get(guildId);
+		if(guild) guild.shard.send(payload);
+	}
+}, new Connectors.DiscordJS(client), Nodes);
