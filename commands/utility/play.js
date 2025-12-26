@@ -7,10 +7,10 @@ module.exports = {
     .addStringOption(option =>
         option.setName('search')
         .setDescription('The song to play')
-        .setRequired(true)
     ),
     async execute(interaction, client) {
       try {
+        if(interaction.options.getString('search')){
             const search = interaction.options.getString('search');
             const { channel } = interaction.member.voice;
 
@@ -55,7 +55,7 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setColor('#1DB954')
                     .setTitle('Playlist Added To Queue')
-                    .setDescription(`**[${res.playlistName}](${search})** \n\n**Tracks Queued:** \`${res.tracks.length}`)
+                    .setDescription(`**[${res.playlistName}](${search})** \n\n**Tracks Queued:** ${player.queue.totalSize}`)
                     .setFooter({ text: 'Enjoy the songs!'})
 
                     return await interaction.editReply({content: '', embeds: [embed]});
@@ -68,12 +68,27 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setColor('#1DB954')
                     .setTitle('Song Added To Queue')
-                    .setDescription(`[${res.tracks[0].title}](${res.tracks[0].uri})`)
+                    .setDescription(`**[${res.tracks[0].title}](${res.tracks[0].uri})** \n\n**Tracks Queued:** ${player.queue.totalSize}`)
                     .setFooter({text: 'Playing now!'})
                     .setTimestamp()
 
                     return await interaction.editReply({content: '', embeds: [embed]});
             }
+        }
+        else{
+            const player = await client.manager.players.get(interaction.guild.id);
+            
+            if(!player.paused) { return await interaction.reply(`**There is no currently playing song!**`) }
+            player.play();
+            const embed = new EmbedBuilder()
+                    .setColor('#1DB954')
+                    .setTitle('Resumed Track')
+                    .setDescription(`**[${player.queue.current.title}](${player.queue.current.uri})** \n\n**Tracks Queued:** ${player.queue.totalSize}`)
+                    .setFooter({text: 'Playing now!'})
+                    .setTimestamp()
+
+                    return await interaction.reply({content: '', embeds: [embed]});
+        }
       } 
       catch (error) {
             console.error(error);
