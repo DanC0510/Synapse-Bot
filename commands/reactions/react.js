@@ -24,6 +24,13 @@ module.exports = {
 		catch (err) {
 				console.error(`Failed to react with ${emoji.reaction}:`, err);
 			}
+
+		await interaction.reply({
+			content: `Reacted with ${emoji}`,
+			ephemeral: true
+		});
+
+		await interaction.deleteReply();
 	},
 };
 
