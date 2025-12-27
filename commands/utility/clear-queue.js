@@ -1,9 +1,9 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, time, TimestampStyles, } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName('pause')
-    .setDescription('Pause currently playing song'),
+    .setName('clear-queue')
+    .setDescription('Clears the entire queue'),
     async execute(interaction, client) {
       try {
             const player = await client.manager.players.get(interaction.guild.id);
@@ -13,19 +13,19 @@ module.exports = {
             const { channel } = interaction.member.voice;
             if(!channel || interaction.member.voice.channel !== interaction.guild.members.me.voice.channel) return await interaction.reply("I'm not in the same voice channel as you!");
 
-            await player.pause(true);
+            await player.queue.clear();
 
             const embed = new EmbedBuilder()
-                .setColor('#F54927')
-                .setTitle('Current Song Paused')
-                .setDescription(`**[${player.queue.current.title}](${player.queue.current.uri})** \n\n**Tracks Queued:** ${player.queue.totalSize}`)
-                .setFooter({ text: 'Enjoy the songs!'})
+                .setColor('#f01616')
+                .setTitle('Clearing Queue!')
+                .setDescription(`Queue is now Empty!`)
+                .setFooter({ text: 'Enjoy your Day!'})
 
             return await interaction.reply({content: '', embeds: [embed]});
       } 
       catch (error) {
             console.error(error);
-            return await interaction.reply(`**An error occurred while trying to pause the song.**`);
+            return await interaction.reply(`**An error occurred while trying to clear the queue.**`);
       } 
     },
 };
