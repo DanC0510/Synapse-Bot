@@ -13,31 +13,39 @@ module.exports = {
 			.setRequired(true)
 			.setDescription('Emoji to react with')),
 	async execute(interaction) {
+		const channel = interaction.channel;
+		const raw_emoji = interaction.options.getString('emoji');
+		const emoji = parse_emoji(raw_emoji);
+
 		try {
-			const channel = interaction.channel;
-
-			try {
-					const message = await channel.messages.fetch(interaction.options.getString('message_id'));
-					await message.react(interaction.options.getString('emoji'));
-				}
-			catch (err) {
-					console.error(`Failed to react with ${interaction.options.getString('emoji')}:`, err);
-				}
-
-			await interaction.reply({
-				content: `Reacted with ${interaction.options.getString('emoji')}`,
-				ephemeral: true
-			});
-		}
-		catch (error) {
-			console.error('Error executing reaction command:', error);
-
-			if (interaction.deferred || interaction.replied) {
-				await interaction.editReply('There was an error while executing this command.');
+				const message = await channel.messages.fetch(interaction.options.getString('message_id'));
+				await message.react(emoji.reaction);
 			}
-			else {
-				await interaction.reply('There was an error while executing this command.');
+		catch (err) {
+				console.error(`Failed to react with ${emoji.reaction}:`, err);
 			}
-		}
 	},
 };
+
+function parse_emoji(input) 
+	{
+  		// Custom emoji: <:name:id> or <a:name:id>
+  		const custom = input.match(/^<a?:([\w-]+):(\d+)>$/);
+
+  		if (custom) {
+    		return {
+      			type: 'custom',
+      			animated: input.startsWith('<a:'),
+      			name: custom[1],
+      			id: custom[2],
+      			reaction: `${custom[1]}:${custom[2]}`,
+	    	};
+	  	}
+
+  		// Unicode emoji
+  		return {
+	    	type: 'unicode',
+	    	emoji: input,
+		    reaction: input,
+  		};
+	}
