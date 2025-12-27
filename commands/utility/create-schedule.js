@@ -17,7 +17,7 @@ module.exports = {
 			const channel = interaction.channel;
 
 			const messages = await channel.messages.fetch({ limit: 2 });
-			const prevSchedule = messages.find(m => m.content.startsWith('# Schedule'));
+			const prevSchedule = await messages.last();
 
 			const reactionCounts = [];
 
