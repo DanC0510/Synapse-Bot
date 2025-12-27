@@ -28,7 +28,7 @@ module.exports = {
             const date = new Date(Date.now() + (remaining_time * 1000)) //convert remaining_time back to ms for date conversion
             const timeString = time(date, TimestampStyles.ShortTime);
             queue_names += `**Remaining Time:**\n 
-            ${hours !== 0 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`}\n
+            ${hours !== 0 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`}
             The queue will finish at ${timeString}`;
             const embed = new EmbedBuilder()
                 .setColor('#1654f0')
