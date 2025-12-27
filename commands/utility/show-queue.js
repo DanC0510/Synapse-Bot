@@ -21,11 +21,11 @@ module.exports = {
             }
             let remaining_time = await player.queue.current.length + await player.queue.durationLength;
             remaining_time = Math.floor(remaining_time / 1000)
-            const today = new Date();
+            const now = Math.floor(Date.now() / 1000);
             const hours = Math.floor(remaining_time / 3600);
             const minutes = Math.floor((remaining_time % 3600) / 60);
             const seconds = remaining_time % 60;
-            const date = new Date(`${today.getFullYear()}-${today.getMonth()}-${today.getDate}T${hours}:${minutes}:${seconds}`)
+            const date = new Date(Date.now() + (remaining_time * 1000)) //convert remaining_time back to ms for date conversion
             const timeString = time(date, TimestampStyles.ShortTime);
             queue_names += `**Remaining Time:**\n 
             ${hours !== 0 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`}\n
