@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, time, TimestampStyles, } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,7 +19,17 @@ module.exports = {
                 queue_names += `${i}. [${track.title}](${track.uri})\n`;
                 i++;
             }
-
+            let remaining_time = await player.queue.current.length + await player.queue.durationLength;
+            remaining_time = Math.floor(remaining_time / 1000)
+            const today = new Date();
+            const hours = Math.floor(remaining_time / 3600);
+            const minutes = Math.floor((remaining_time % 3600) / 60);
+            const seconds = remaining_time % 60;
+            const date = new Date(`${today.getFullYear()}-${today.getMonth()}-${today.getDate}T${hours}:${minutes}:${seconds}`)
+            const timeString = time(date, TimestampStyles.ShortTime);
+            queue_names += `**Remaining Time:**\n 
+            ${hours !== 0 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`}\n
+            The queue will finish at ${timeString}`;
             const embed = new EmbedBuilder()
                 .setColor('#1654f0')
                 .setTitle('Showing Queue!')
